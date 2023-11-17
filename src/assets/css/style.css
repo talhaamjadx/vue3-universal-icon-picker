@@ -178,7 +178,7 @@ button.select-icon {
 	-ms-flex-direction: column;
 	flex-direction: column;
 	padding: 30px 80px 0;
-	width: 75%;
+	width: 100%;
 }
 .aim-modal--icon-preview-inner{
 	overflow: auto;
@@ -321,9 +321,18 @@ button.select-icon {
 
 /* preview sidebar */
 .aim-sidebar-preview {
-  position: absolute;
   bottom: 50px;
   width: 300px;
+}
+
+.form-input {
+    min-height: 25px;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #C7C7C7;
+    background: #fff;
+    font-size: 14px;
 }
 
 .aim-sidebar-preview .aim-icon-item {

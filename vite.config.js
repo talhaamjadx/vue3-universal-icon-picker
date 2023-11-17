@@ -1,18 +1,6 @@
-import vue from '@vitejs/plugin-vue'
-
-export default {
-  plugins: [vue()],
-  server: {
-    open: '/index.html'
-  }
-}
-
-
-/*
-//Use This COnfig For UMD and ESM Build
-import vue from "@vitejs/plugin-vue"
-const path = require("path")
-const replace = require("@rollup/plugin-replace")
+import vue from "@vitejs/plugin-vue";
+const path = require("path");
+const replace = require("@rollup/plugin-replace");
 
 export default {
   plugins: [
@@ -35,5 +23,4 @@ export default {
       },
     },
   },
-}
-*/
+};

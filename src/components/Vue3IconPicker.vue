@@ -1,6 +1,23 @@
 <template>
-  <span v-bind="$attrs" @click="togglePicker">
-    <i class="vue3-icon-picker" :class="modelValue"></i>
+  <span
+    style="display: flex; align-items: center; justify-content: center"
+    v-bind="$attrs"
+    @click="togglePicker"
+  >
+    <i
+      v-if="modelValue"
+      style="margin-right: 1rem"
+      class="vue3-icon-picker"
+      :class="modelValue"
+    ></i>
+    <input
+      readonly
+      style="cursor: pointer"
+      :placeholder="placeholder"
+      type="text"
+      class="form-input"
+      :value="modelValue"
+    />
   </span>
 
   <div class="aim-modal aim-open" v-if="isVisible">
@@ -16,31 +33,6 @@
         </div>
       </div>
       <div class="aim-modal--body">
-        <div class="aim-modal--sidebar">
-          <div class="aim-modal--sidebar-tabs">
-            <div
-              class="aim-modal--sidebar-tab-item"
-              data-library-id="all"
-              v-for="tab in tabs"
-              :key="tab.id"
-              :class="{ 'aesthetic-active': isActiveTab(tab.id) }"
-              @click="setActiveTab(tab)"
-            >
-              <i :class="tab.icon"></i>
-              <span>{{ tab.title }}</span>
-            </div>
-          </div>
-          <div class="aim-sidebar-preview">
-            <div class="aim-icon-item ">
-              <div class="aim-icon-item-inner">
-                <i :class="activeGlyph"></i>
-                <div class="aim-icon-item-name">
-                  {{ activeGlyph }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="aim-modal--icon-preview-wrap">
           <div class="aim-modal--icon-search">
             <input v-model="filterText" placeholder="Filter by name..." />
@@ -74,110 +66,114 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import fontLibrary from './data/fonts'
+import { ref, computed } from "vue";
+import fontLibrary from "./data/fonts";
 
 export default {
-  inheritAttrs:false,
+  inheritAttrs: false,
   props: {
+    placeholder: {
+      type: String,
+      default: "Click to select an icon",
+    },
     label: {
       type: String,
-      default: 'Vue3 Icon Picker'
+      default: "Icon Picker",
     },
     modelValue: {
       type: String,
-      default: 'fas fa-circle'
-    }
+      default: "fas fa-circle",
+    },
   },
-  setup (props, context) {
-    const filterText = ref('')
-    const activeGlyph = ref(props.modelValue)
-    const isVisible = ref(false)
+  setup(props, context) {
+    const filterText = ref("");
+    const activeGlyph = ref(props.modelValue);
+    const isVisible = ref(false);
 
     const tabs = [
       {
-        id: 'all',
-        title: 'All Icons',
-        icon: 'fas fa-star-of-life',
-        link: 'all'
+        id: "all",
+        title: "All Icons",
+        icon: "fas fa-star-of-life",
+        link: "all",
       },
       {
-        id: 'far',
-        title: 'Font Awesome Regular',
-        icon: 'fab fa-font-awesome-alt',
-        link: fontLibrary.fontAwesome.variants.regular
+        id: "far",
+        title: "Font Awesome Regular",
+        icon: "fab fa-font-awesome-alt",
+        link: fontLibrary.fontAwesome.variants.regular,
       },
       {
-        id: 'fas',
-        title: 'Font Awesome Solid',
-        icon: 'fab fa-font-awesome',
-        link: fontLibrary.fontAwesome.variants.solid
+        id: "fas",
+        title: "Font Awesome Solid",
+        icon: "fab fa-font-awesome",
+        link: fontLibrary.fontAwesome.variants.solid,
       },
       {
-        id: 'fab',
-        title: 'Font Awesome Brands',
-        icon: 'fab fa-font-awesome-flag',
-        link: fontLibrary.fontAwesome.variants.brands
-      }
-    ]
+        id: "fab",
+        title: "Font Awesome Brands",
+        icon: "fab fa-font-awesome-flag",
+        link: fontLibrary.fontAwesome.variants.brands,
+      },
+    ];
 
-    const activeTab = ref(tabs[0])
+    const activeTab = ref(tabs[0]);
 
     const allGlyphs = [].concat(
       tabs[1].link.icons,
       tabs[2].link.icons,
       tabs[3].link.icons
-    )
+    );
 
     const glyphs = computed(() => {
-      let _glyphs = []
-      if (activeTab.value.id !== 'all') {
-        _glyphs = activeTab.value.link.icons
+      let _glyphs = [];
+      if (activeTab.value.id !== "all") {
+        _glyphs = activeTab.value.link.icons;
       } else {
-        _glyphs = allGlyphs
+        _glyphs = allGlyphs;
       }
 
-      if (filterText.value != '') {
-        const _filterText = filterText.value.toLowerCase()
+      if (filterText.value != "") {
+        const _filterText = filterText.value.toLowerCase();
         _glyphs = _glyphs.filter(
-          item => item.substr(7, filterText.value.length) === _filterText
-        )
+          (item) => item.substr(7, filterText.value.length) === _filterText
+        );
       }
-      return _glyphs
-    })
+      return _glyphs;
+    });
 
-    const setActiveGlyph = glyph => {
-      activeGlyph.value = glyph
-    }
+    const setActiveGlyph = (glyph) => {
+      activeGlyph.value = glyph;
+    };
 
-    const isActiveGlyph = glyph => {
-      return activeGlyph.value == glyph
-    }
+    const isActiveGlyph = (glyph) => {
+      return activeGlyph.value == glyph;
+    };
 
-    const isActiveTab = tab => {
-      return tab == activeTab.value.id
-    }
+    const isActiveTab = (tab) => {
+      return tab == activeTab.value.id;
+    };
 
-    const setActiveTab = tab => {
-      activeTab.value = tab
+    const setActiveTab = (tab) => {
+      activeTab.value = tab;
       // filterText.value=''; //nice feature
-    }
+    };
 
-    const getGlyphName = glyph =>
-      glyph.replace(/f.. fa-/g, '').replace('-', ' ')
+    const getGlyphName = (glyph) =>
+      glyph.replace(/f.. fa-/g, "").replace("-", " ");
 
     const insert = () => {
-      context.emit('update:modelValue', activeGlyph.value)
-      isVisible.value = false
-    }
+      context.emit("update:modelValue", activeGlyph.value);
+      isVisible.value = false;
+    };
 
     const togglePicker = () => {
-      isVisible.value = !isVisible.value
-    }
+      isVisible.value = !isVisible.value;
+    };
 
     const closePicker = () => {
-      isVisible.value = false
-    }
+      isVisible.value = false;
+    };
 
     return {
       fontLibrary,
@@ -193,12 +189,12 @@ export default {
       insert,
       isVisible,
       togglePicker,
-      closePicker
-    }
-  }
-}
+      closePicker,
+    };
+  },
+};
 </script>
 
 <style scoped>
-@import '../assets/css/style.css';
+@import "../assets/css/style.css";
 </style>
